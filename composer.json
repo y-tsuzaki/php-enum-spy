@@ -1,0 +1,21 @@
+{
+    "name": "y-tsuzaki/php-enum-spy",
+    "description": "A CLI tool to extract a list of Enum definitions from PHP files.",
+    "type": "library",
+    "license": "MIT Lincense",
+    "autoload": {
+        "psr-4": {
+            "YTsuzaki\\PhpEnumSpy\\": "src/"
+        }
+    },
+    "require": {
+        "php": "^8.1",
+        "league/climate": "^3.9"
+    },
+    "bin": [
+        "bin/php-enum-spy"
+    ],
+    "require-dev": {
+        "phpunit/phpunit": "^10.0"
+    }
+}

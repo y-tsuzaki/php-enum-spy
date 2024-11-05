@@ -1,0 +1,7 @@
+enumClass,filepath,case,value,myConvertFunction,myConvertFunction2
+/Users/y-tsuzaki/work/php-enum-spy/tests/examples/MyEnumA.php,"examples\MyEnumA",MY_CASE_A,my_case_a,converted_a,日本語A
+/Users/y-tsuzaki/work/php-enum-spy/tests/examples/MyEnumA.php,"examples\MyEnumA",MY_CASE_B,my_case_b,converted_b,日本語b
+/Users/y-tsuzaki/work/php-enum-spy/tests/examples/MyEnumA.php,"examples\MyEnumA",MY_CASE_C,my_case_c,converted_c,日本語c
+/Users/y-tsuzaki/work/php-enum-spy/tests/examples/MyEnumB.php,"examples\MyEnumB",MY_CASE_A,my_case_a,converted_a,
+/Users/y-tsuzaki/work/php-enum-spy/tests/examples/MyEnumB.php,"examples\MyEnumB",MY_CASE_B,my_case_b,converted_b,
+/Users/y-tsuzaki/work/php-enum-spy/tests/examples/MyEnumB.php,"examples\MyEnumB",MY_CASE_C,my_case_c,converted_c,
