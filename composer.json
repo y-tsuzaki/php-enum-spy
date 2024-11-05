@@ -2,7 +2,7 @@
     "name": "y-tsuzaki/php-enum-spy",
     "description": "A CLI tool to extract a list of Enum definitions from PHP files.",
     "type": "library",
-    "license": "MIT Lincense",
+    "license": "MIT License",
     "autoload": {
         "psr-4": {
             "YTsuzaki\\PhpEnumSpy\\": "src/"
