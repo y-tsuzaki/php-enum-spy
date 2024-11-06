@@ -1,7 +1,18 @@
 #!/usr/bin/env php
 <?php
 
-require __DIR__ . '/../vendor/autoload.php';
+if (php_sapi_name() !== 'cli') {
+    exit;
+}
+
+$root_app = dirname(__DIR__);
+
+if (!is_file($root_app . '/vendor/autoload.php')) {
+    $root_app = dirname(__DIR__, 4);
+}
+
+require $root_app . '/vendor/autoload.php';
+
 
 use YTsuzaki\PhpEnumSpy\PhpEnumSpy;
 
