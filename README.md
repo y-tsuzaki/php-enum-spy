@@ -34,6 +34,9 @@ This tool can output JSON files like the following.
 
 CSV files are output in the following format.
 
+![CSV_FILE_SCREENSHOT](https://github.com/user-attachments/assets/fbbf926d-2943-4e6e-ad64-3e97df91d22f)
+
+
 ```csv:ExampleEnum.csv
 class_name,file_path,case,value,displayName
 "YTsuzaki\PhpEnumSpyExample\ExampleEnum",/Users/y-tsuzaki/work/php-enum-spy-example/src/ExampleEnum.php,IN_PROGRESS,in_progress,進行中
