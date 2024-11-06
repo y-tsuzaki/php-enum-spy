@@ -1,8 +1,7 @@
 
 # PHP-Enum-Spy
-A PHP CLI tool for extracting enum definitions.
-
- Outputs the definition of Enum to CSV and JSON files.
+A PHP CLI tool for extracting Enum definitions.
+Outputs Enum definitions to CSV and JSON files for easy access and analysis.
 
 ## Example
 
@@ -97,8 +96,9 @@ $config = [
 return $config;
 ```
 
-jp: もしEnumにあるメソッドを読んで値を変換したいなら以下のようにカスタム変換関数を追加してください。
-en: If you want to read the method in Enum and convert the value, add a custom conversion function as follows.
+### Custom conversion function
+
+If you want to read the method in Enum and convert the value, add a custom conversion function as follows.
 
 ```php:php-enum-spy.config.php
 <?php
@@ -124,13 +124,17 @@ return $config;
 
 ## Usage
 
+Create a configuration file (php-enum-spy.config.php) based on the above description.
+```bash
+vi php-enum-spy.config.php
+```
+
 Run the following command.
 ```bash
 vendor/bin/php-enum-spy
 ```
 
-jp : ./output にCSVファイルとJSONファイルが出力されます。
-en : CSV files and JSON files are output to ./output.
+CSV files and JSON files are output to ./output.
 ```
 output  
 ├── enum_metadata.csv
