@@ -69,7 +69,8 @@ enum ExampleEnum: string
 }
 ```
 
-
+Please refer to the following Example repository for details.
+https://github.com/y-tsuzaki/php-enum-spy-example
 
 ## Installation
 
