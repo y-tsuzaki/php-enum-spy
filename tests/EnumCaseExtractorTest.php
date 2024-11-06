@@ -28,7 +28,7 @@ class EnumCaseExtractorTest extends TestCase
         $metaData = $this->extractor->extractCases('tests/examples/dir1/MyEnumA.php');
 
         $this->assertStringEndsWith('tests/examples/dir1/MyEnumA.php' ,$metaData->filepath);
-        $this->assertEquals('examples\Dir1\MyEnumA' ,$metaData->className);
+        $this->assertEquals('examples\dir1\MyEnumA' ,$metaData->className);
 
         $caseNames = $metaData->getCaseNames();
 

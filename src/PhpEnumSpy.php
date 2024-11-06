@@ -50,6 +50,13 @@ class PhpEnumSpy
         );
         $exporter->export();
 
+        // export to json
+        $exporter = new JsonExporter(
+            $config,
+            $enumMetadataList
+        );
+        $exporter->export();
+
         $climate->info('Exported to :' . $exporter->getOutputFilePath() );
         $climate->info('Finished!');
     }

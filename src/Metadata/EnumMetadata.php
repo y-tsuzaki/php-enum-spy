@@ -51,4 +51,26 @@ class EnumMetadata
         }
         return null;
     }
+
+    public function toArrayForJson(): array
+    {
+        $shortClassName = substr($this->className, strrpos($this->className, '\\') + 1);
+        $nameSpace = substr($this->className, 0, strrpos($this->className, '\\'));
+        $result = [
+            'className' => $shortClassName,
+            'namespace' => $nameSpace,
+            'fully_qualified_class_name' => $this->className,
+            'filePath' => $this->filepath,
+            'cases' => []
+        ];
+
+        foreach ($this->cases as $case) {
+            $result["cases"][$case->name] = [
+                "name" => $case->name,
+                "value" => $case->value,
+                ...$case->convertedValues
+            ];
+        }
+        return $result;
+    }
 }

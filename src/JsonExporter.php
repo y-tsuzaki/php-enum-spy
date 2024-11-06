@@ -7,7 +7,7 @@ namespace YTsuzaki\PhpEnumSpy;
 use http\Exception;
 use YTsuzaki\PhpEnumSpy\Metadata\EnumMetadata;
 
-class CSVExporter
+class JsonExporter
 {
     private string $outputDir;
 
@@ -25,7 +25,7 @@ class CSVExporter
 
     public function getOutputFilePath(): string
     {
-        return $this->outputDir . '/enum_metadata.csv';
+        return $this->outputDir . '/enum_metadata.json';
     }
 
     public function export(): void
@@ -38,26 +38,21 @@ class CSVExporter
             mkdir($this->outputDir);
         }
         $filePath = $this->getOutputFilePath();
-        $csv = fopen( $filePath, 'w');
-        $convertors = $this->config->getCustomConverterNames();
 
-        fputcsv($csv, ['class_name', 'file_path', 'case', 'value', ...$convertors]);
+        $json = json_encode($this->toArrayForJson(), JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+        file_put_contents($filePath, $json);
+    }
 
+    public function toArrayForJson(): array
+    {
+        $result = [
+            "enumCount" => count($this->enumMetadatas),
+            "enums" => [],
+        ];
         foreach ($this->enumMetadatas as $enumMetadata) {
-            foreach ($enumMetadata->cases as $caseMetadata) {
-
-                $convertedValues = array_map(fn($converterName) => $caseMetadata->convertedValues[$converterName], $convertors);
-
-                fputcsv($csv, [
-                    $enumMetadata->className,
-                    $enumMetadata->filepath,
-                    $caseMetadata->name,
-                    $caseMetadata->value,
-                    ...$convertedValues
-                ]);
-            }
+            $result["enums"][$enumMetadata->className] = $enumMetadata->toArrayForJson();
         }
-        fclose($csv);
+        return $result;
     }
 
 }

@@ -10,6 +10,7 @@ class PhpEnumSpyTest extends \PHPUnit\Framework\TestCase
         $app->run();
 
         $this->assertFileExists(getcwd() . '/output/enum_metadata.csv');
+        $this->assertFileExists(getcwd() . '/output/enum_metadata.json');
     }
 
 }
