@@ -18,16 +18,25 @@ class PhpEnumSpy
     public function run() {
         $climate = new CLImate();
 
+        // initialize
+        $config = new Config();
+        $logger = new Logger(LogLevel::WARNING);
+
         // Find php files
-        $enumFileFinder = new EnumFileFinder();
-        $extractor = new CaseExtractor(new Logger(LogLevel::WARNING));
+        $enumFileFinder = new EnumFileFinder(
+            $config
+        );
         $enumFiles = $enumFileFinder->findPhpFiles();
 
         $climate->info('detected Enum PHP file!');
 
         $climate->info( implode(",\n", $enumFiles));
 
-        // extract enum cases
+        // Extract enum cases
+        $extractor = new EnumCaseExtractor(
+            $config,
+            $logger
+        );
         $enumMetadataList = [];
         foreach ($enumFiles as $enumFile) {
             $enumMetadata = $extractor->extractCases($enumFile);
@@ -35,10 +44,13 @@ class PhpEnumSpy
         }
 
         // export to csv
-        $exporter = new CSVExporter($enumMetadataList);
+        $exporter = new CSVExporter(
+            $config,
+            $enumMetadataList
+        );
         $exporter->export();
 
-        $climate->info('Exported to :' . $exporter->getSavedFilePath() );
+        $climate->info('Exported to :' . $exporter->getOutputFilePath() );
         $climate->info('Finished!');
     }
 }

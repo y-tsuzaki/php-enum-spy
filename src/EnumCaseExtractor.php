@@ -8,31 +8,17 @@ use Closure;
 use Exception;
 use InvalidArgumentException;
 use League\CLImate\Logger;
+use YTsuzaki\PhpEnumSpy\Metadata\CaseMetadata;
+use YTsuzaki\PhpEnumSpy\Metadata\EnumMetadata;
 
-class CaseExtractor
+class EnumCaseExtractor
 {
 
-    /**
-     * @var array<\Closure>
-     */
-    private array $convertFunctions;
     public function __construct(
+        private Config $config,
         private Logger $logger,
     )
     {
-
-        // 現在のディレクトリの設定ファイルを読み込む
-        $configFile = getcwd() . "/php-enum-spy.config.php";
-
-        if (file_exists($configFile)) {
-            // 設定ファイルをインクルードして、$config変数を取得
-            $config = include $configFile;
-        } else {
-            // エラーハンドリング
-            throw new InvalidArgumentException("Config file not found!");
-        }
-
-        $this->convertFunctions = $config['convert_functions'] ?? [];
     }
 
     public function extractCases(string $file): EnumMetadata
@@ -60,36 +46,39 @@ class CaseExtractor
             throw new Exception("No class found in the file: $filePath");
         }
 
-        // CASEのKeyValue取得
-        $enumData = [];
         $reflectionEnum = new \ReflectionEnum($className);
+        $caseMetadataList = [];
         foreach ($reflectionEnum->getCases() as $case) {
+            $caseName = $case->getName();
             $caseValue = $case->getValue()->value;
-            $enumData[$case->getName()] = $caseValue;
-        }
 
-        $this->logger->debug("Detected cases: " . implode(", ", array_keys($enumData)));
+            $convertedResults = [];
+            $convertFunctions = $this->config->customConverters;
+            foreach ($convertFunctions as $funcName => $closure) {
+                try {
+                    $convertedResults[$funcName] = $closure($case->getValue());
+                } catch (Exception $e) {
+                    $convertedResults[$funcName] = "ERROR";
 
-        //　カスタム関数での変換
-        $convertedResults = [];
-        $convertFunctions = $this->convertFunctions;
-        foreach ($convertFunctions as $funcName => $closure) {
-            $this->logger->debug("Call a custom convert function: $funcName");
-            $convertedResults[$funcName] = [];
-            foreach ($reflectionEnum->getCases() as $case) {
-                $convertedResults[$funcName][$case->getName()] = $closure($case->getValue());
+                    $this->logger->error("Failed to convert the value of the case: $caseName");
+                    $this->logger->error($e->getMessage());
+                }
             }
-        }
 
-        $metaData = new EnumMetadata(
+            $caseMetadataList[] = new CaseMetadata(
+                $caseName,
+                $caseValue,
+                $convertedResults
+            );
+        }
+        $enumMetaData = new EnumMetadata(
             $className,
             $filePath,
-            $enumData,
-            $convertedResults
+            $caseMetadataList
         );
 
-        $this->logger->info("Extracted enum metadata: $className");
+        $this->logger->info("Detected cases: " . implode(", ", $enumMetaData->getCaseNames()));
 
-        return $metaData;
+        return $enumMetaData;
     }
 }

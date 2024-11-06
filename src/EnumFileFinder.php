@@ -4,29 +4,18 @@ declare(strict_types=1);
 
 namespace YTsuzaki\PhpEnumSpy;
 
-use http\Exception\InvalidArgumentException;
-
 class EnumFileFinder
 {
     /**
-     * @var array|mixed
+     * @var array
      */
     private array $targetDirs;
 
-    public function __construct()
+    public function __construct(
+        private Config $config,
+    )
     {
-        // 現在のディレクトリの設定ファイルを読み込む
-        $configFile = getcwd() . "/php-enum-spy.config.php";
-
-        if (file_exists($configFile)) {
-            // 設定ファイルをインクルードして、$config変数を取得
-            $config = include $configFile;
-        } else {
-            // エラーハンドリング
-            throw new InvalidArgumentException("Config file not found!");
-        }
-
-        $this->targetDirs = $config['dirs'] ?? [];
+        $this->targetDirs = $this->config->targetDirs;
     }
 
     function findPhpFiles(): array
@@ -38,6 +27,7 @@ class EnumFileFinder
         }
         return $files;
     }
+
     private function findPhpFilesInDir(string $targetDir): array {
         $files = [];
         $iterator = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($targetDir));

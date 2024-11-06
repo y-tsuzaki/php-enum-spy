@@ -1,12 +1,16 @@
 <?php
 
 use PHPUnit\Framework\TestCase;
+use YTsuzaki\PhpEnumSpy\Config;
+use YTsuzaki\PhpEnumSpy\EnumFileFinder;
 
 class EnumFileFinderTest extends TestCase
 {
 
     public function test() {
-        $finder = new \YTsuzaki\PhpEnumSpy\EnumFileFinder();
+        $finder = new EnumFileFinder(
+            new Config()
+        );
         $files = $finder->findPhpFiles();
 
         $this->assertIsArray($files);

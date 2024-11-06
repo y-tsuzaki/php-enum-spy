@@ -5,24 +5,24 @@ declare(strict_types=1);
 namespace YTsuzaki\PhpEnumSpy;
 
 use http\Exception;
+use YTsuzaki\PhpEnumSpy\Metadata\EnumMetadata;
 
 class CSVExporter
 {
     /**
-     * @param string $outputDir
-     * @param array<EnumMetadata> $enumMetadatas
+     * @param  Config  $config
+     * @param  array<EnumMetadata>  $enumMetadatas
+     * @param  string|null  $outputDir
      */
     public function __construct(
+        private Config $config,
         private array $enumMetadatas,
-        private ?string $outputDir = null
     )
     {
-        if ($outputDir === null) {
-            $this->outputDir = getcwd() . '/output';
-        }
+        $this->outputDir = getcwd() . '/output';
     }
 
-    public function getSavedFilePath(): string
+    public function getOutputFilePath(): string
     {
         return $this->outputDir . '/enum_metadata.csv';
     }
@@ -36,25 +36,24 @@ class CSVExporter
         if (!is_dir($this->outputDir)) {
             mkdir($this->outputDir);
         }
-        $csv = fopen( $this->outputDir . '/enum_metadata.csv', 'w');
-        $convertors = array_keys($this->enumMetadatas[0]->convertedValues);
-        fputcsv($csv, ['enumClass', 'filepath', 'case', 'value', ...$convertors]);
+        $filePath = $this->getOutputFilePath();
+        $csv = fopen( $filePath, 'w');
+        $convertors = $this->config->getCustomConverterNames();
+
+        fputcsv($csv, ['class_name', 'file_path', 'case', 'value', ...$convertors]);
 
         foreach ($this->enumMetadatas as $enumMetadata) {
-            foreach ($enumMetadata->keyValues as $case => $value) {
-                $convertedResults = [];
-                foreach ($enumMetadata->convertedValues as $funcName => $convertedValues) {
-                    $convertedResults[] = $convertedValues[$case];
-                }
+            foreach ($enumMetadata->cases as $caseMetadata) {
+
+                $convertedValues = array_map(fn($converterName) => $caseMetadata->convertedValues[$converterName], $convertors);
 
                 fputcsv($csv, [
+                    $enumMetadata->className,
                     $enumMetadata->filepath,
-                    $enumMetadata->enumClass,
-                    $case,
-                    $value,
-                    ...$convertedResults
+                    $caseMetadata->name,
+                    $caseMetadata->value,
+                    ...$convertedValues
                 ]);
-
             }
         }
         fclose($csv);

@@ -1,17 +1,22 @@
 <?php
 
+use League\CLImate\Logger;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\LogLevel;
+use YTsuzaki\PhpEnumSpy\Config;
+use YTsuzaki\PhpEnumSpy\EnumCaseExtractor;
 
 class EnumCaseExtractorTest extends TestCase
 {
-    private \YTsuzaki\PhpEnumSpy\CaseExtractor $extractor;
+    private EnumCaseExtractor $extractor;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->extractor = new \YTsuzaki\PhpEnumSpy\CaseExtractor(
-            new \League\CLImate\Logger(\Psr\Log\LogLevel::WARNING)
+        $this->extractor = new EnumCaseExtractor(
+            new Config(),
+            new Logger(LogLevel::WARNING)
         );
     }
 
@@ -22,35 +27,33 @@ class EnumCaseExtractorTest extends TestCase
     public function test() {
         $metaData = $this->extractor->extractCases('tests/examples/dir1/MyEnumA.php');
 
-        $keyValue = $metaData->keyValues;
+        $this->assertStringEndsWith('tests/examples/dir1/MyEnumA.php' ,$metaData->filepath);
+        $this->assertEquals('examples\Dir1\MyEnumA' ,$metaData->className);
 
-        $this->assertIsArray($keyValue);
-        $this->assertNotEmpty($keyValue);
+        $caseNames = $metaData->getCaseNames();
 
-        $this->assertArrayHasKey('MY_CASE_A', $keyValue);
-        $this->assertArrayHasKey('MY_CASE_B', $keyValue);
-        $this->assertArrayHasKey('MY_CASE_C', $keyValue);
-        $this->assertArrayNotHasKey('X', $keyValue);
+        // test case names
+        $this->assertIsArray($caseNames);
+        $this->assertNotEmpty($caseNames);
+        $this->assertContains('MY_CASE_A', $caseNames);
+        $this->assertContains('MY_CASE_B', $caseNames);
+        $this->assertContains('MY_CASE_C', $caseNames);
 
-        $this->assertContains('my_case_a', $keyValue);
-        $this->assertContains('my_case_b', $keyValue);
-        $this->assertContains('my_case_c', $keyValue);
-        $this->assertNotContains('X', $keyValue);
+        // test case values
+        $this->assertEquals('my_case_a', $metaData->getCaseValue('MY_CASE_A'));
+        $this->assertEquals('my_case_b', $metaData->getCaseValue('MY_CASE_B'));
+        $this->assertEquals('my_case_c', $metaData->getCaseValue('MY_CASE_C'));
 
-        $convertedValues = $metaData->convertedValues;
-        $myConvertResult = $convertedValues['myConvertFunction'];
 
-        $this->assertIsArray($myConvertResult);
-        $this->assertNotEmpty($myConvertResult);
-        $this->assertArrayHasKey('MY_CASE_A', $myConvertResult);
-        $this->assertArrayHasKey('MY_CASE_B', $myConvertResult);
-        $this->assertArrayHasKey('MY_CASE_C', $myConvertResult);
-        $this->assertArrayNotHasKey('X', $myConvertResult);
+        // test custom converter results
+        $this->assertEquals('converted_a', $metaData->getConvertedValue('MY_CASE_A', 'custom_convert_1'));
+        $this->assertEquals('converted_b', $metaData->getConvertedValue('MY_CASE_B', 'custom_convert_1'));
+        $this->assertEquals('converted_c', $metaData->getConvertedValue('MY_CASE_C', 'custom_convert_1'));
 
-        $this->assertContains('converted_a', $myConvertResult);
-        $this->assertContains('converted_b', $myConvertResult);
-        $this->assertContains('converted_c', $myConvertResult);
-        $this->assertNotContains('X', $myConvertResult);
+
+        $this->assertEquals('日本語a', $metaData->getConvertedValue('MY_CASE_A', 'custom_convert_2'));
+        $this->assertEquals('日本語b', $metaData->getConvertedValue('MY_CASE_B', 'custom_convert_2'));
+        $this->assertEquals('日本語c', $metaData->getConvertedValue('MY_CASE_C', 'custom_convert_2'));
     }
 
     /**
@@ -59,16 +62,15 @@ class EnumCaseExtractorTest extends TestCase
     public function testIntegerEnum() {
         $metaData = $this->extractor->extractCases('tests/examples/dir1/MyIntegerEnum.php');
 
-        $keyValue = $metaData->keyValues;
+        $caseNames = $metaData->getCaseNames();
+        $this->assertIsArray($caseNames);
+        $this->assertNotEmpty($caseNames);
 
-        $this->assertIsArray($keyValue);
-        $this->assertNotEmpty($keyValue);
-
-        $this->assertArrayHasKey('MY_CASE_A', $keyValue);
-        $this->assertArrayHasKey('MY_CASE_B', $keyValue);
-        $this->assertArrayHasKey('MY_CASE_C', $keyValue);
-        $this->assertEquals('1', $keyValue['MY_CASE_A']);
-        $this->assertEquals('2', $keyValue['MY_CASE_B']);
-        $this->assertEquals('1234567890', $keyValue['MY_CASE_C']);
+        $this->assertContains('MY_CASE_A', $caseNames);
+        $this->assertContains('MY_CASE_B', $caseNames);
+        $this->assertContains('MY_CASE_C', $caseNames);
+        $this->assertEquals('1', $metaData->getCaseValue('MY_CASE_A'));
+        $this->assertEquals('2', $metaData->getCaseValue('MY_CASE_B'));
+        $this->assertEquals('1234567890', $metaData->getCaseValue('MY_CASE_C'));
     }
 }
