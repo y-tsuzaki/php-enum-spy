@@ -12,6 +12,10 @@ jobs:
         php-version: [ '8.1', '8.2' ]
     steps:
       - uses: actions/checkout@v2
+      - name: Debug file paths
+        run: |
+          ls -R /home/runner/work/php-enum-spy/php-enum-spy/tests/examples/dir1
+          ls -R /home/runner/work/php-enum-spy/php-enum-spy/src
       - name: Setup PHP ${{ matrix.php-version }}
         uses: shivammathur/setup-php@v2
         with:
