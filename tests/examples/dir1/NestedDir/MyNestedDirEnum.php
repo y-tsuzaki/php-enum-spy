@@ -1,6 +1,6 @@
 <?php
 
-namespace examples\Dir1\NestedDir;
+namespace examples\dir1\NestedDir;
 
 enum MyNestedDirEnum: string
 {

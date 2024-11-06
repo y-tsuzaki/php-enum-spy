@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace examples\Dir2;
+namespace examples\dir2;
 
 enum MyEnumC: string
 {

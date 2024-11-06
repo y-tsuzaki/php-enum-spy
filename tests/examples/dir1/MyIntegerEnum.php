@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace examples\Dir1;
+namespace examples\dir1;
 
 enum MyIntegerEnum: int
 {
