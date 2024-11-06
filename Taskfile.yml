@@ -1,0 +1,6 @@
+tasks:
+  test:
+    desc: run unit tests
+    cmds:
+      - vendor/bin/phpunit
+

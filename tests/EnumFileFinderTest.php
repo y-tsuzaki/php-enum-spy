@@ -11,8 +11,11 @@ class EnumFileFinderTest extends TestCase
 
         $this->assertIsArray($files);
         $this->assertNotEmpty($files);
-        $this->assertContains('tests/examples/MyEnumA.php', $files);
-        $this->assertContains('tests/examples/MyEnumB.php', $files);
-        $this->assertNotContains('tests/examples/MyClass.php', $files);
+        $this->assertContains('tests/examples/dir1/MyEnumA.php', $files);
+        $this->assertContains('tests/examples/dir1/MyEnumB.php', $files);
+        $this->assertContains('tests/examples/dir1/NestedDir/MyNestedDirEnum.php', $files);
+        $this->assertContains('tests/examples/dir1/MyIntegerEnum.php', $files);
+        $this->assertContains('tests/examples/dir2/MyEnumC.php', $files);
+        $this->assertNotContains('tests/examples/dir1/MyClass.php', $files);
     }
 }

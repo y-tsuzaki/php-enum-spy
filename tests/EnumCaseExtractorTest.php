@@ -4,11 +4,23 @@ use PHPUnit\Framework\TestCase;
 
 class EnumCaseExtractorTest extends TestCase
 {
+    private \YTsuzaki\PhpEnumSpy\CaseExtractor $extractor;
 
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->extractor = new \YTsuzaki\PhpEnumSpy\CaseExtractor(
+            new \League\CLImate\Logger(\Psr\Log\LogLevel::WARNING)
+        );
+    }
+
+
+    /**
+     * @runInSeparateProcess
+     */
     public function test() {
-        $extractor = new \YTsuzaki\PhpEnumSpy\CaseExtractor();
-
-        $metaData = $extractor->extractCases('tests/examples/MyEnumA.php');
+        $metaData = $this->extractor->extractCases('tests/examples/dir1/MyEnumA.php');
 
         $keyValue = $metaData->keyValues;
 
@@ -39,5 +51,24 @@ class EnumCaseExtractorTest extends TestCase
         $this->assertContains('converted_b', $myConvertResult);
         $this->assertContains('converted_c', $myConvertResult);
         $this->assertNotContains('X', $myConvertResult);
+    }
+
+    /**
+     * @runInSeparateProcess
+     */
+    public function testIntegerEnum() {
+        $metaData = $this->extractor->extractCases('tests/examples/dir1/MyIntegerEnum.php');
+
+        $keyValue = $metaData->keyValues;
+
+        $this->assertIsArray($keyValue);
+        $this->assertNotEmpty($keyValue);
+
+        $this->assertArrayHasKey('MY_CASE_A', $keyValue);
+        $this->assertArrayHasKey('MY_CASE_B', $keyValue);
+        $this->assertArrayHasKey('MY_CASE_C', $keyValue);
+        $this->assertEquals('1', $keyValue['MY_CASE_A']);
+        $this->assertEquals('2', $keyValue['MY_CASE_B']);
+        $this->assertEquals('1234567890', $keyValue['MY_CASE_C']);
     }
 }

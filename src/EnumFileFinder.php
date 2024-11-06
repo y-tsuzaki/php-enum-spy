@@ -31,7 +31,14 @@ class EnumFileFinder
 
     function findPhpFiles(): array
     {
-        $targetDir = $this->targetDirs[0]; // fixme 一つ目だけ対応
+        $files = [];
+        foreach ($this->targetDirs as $targetDir) {
+            $filesInSingleDir = $this->findPhpFilesInDir($targetDir);
+            $files = array_merge($files, $filesInSingleDir);
+        }
+        return $files;
+    }
+    private function findPhpFilesInDir(string $targetDir): array {
         $files = [];
         $iterator = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($targetDir));
         foreach ($iterator as $file) {

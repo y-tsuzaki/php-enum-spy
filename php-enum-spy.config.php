@@ -2,7 +2,8 @@
 
 $config = [
   "dirs" => [
-    "tests/examples",
+      "tests/examples/dir1",
+      "tests/examples/dir2",
   ],
   "convert_functions" => [
       "myConvertFunction" => function (UnitEnum $enum) {

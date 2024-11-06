@@ -33,7 +33,9 @@ class CSVExporter
             throw new \Exception('No enum metadata found');
         }
 
-        mkdir( $this->outputDir);
+        if (!is_dir($this->outputDir)) {
+            mkdir($this->outputDir);
+        }
         $csv = fopen( $this->outputDir . '/enum_metadata.csv', 'w');
         $convertors = array_keys($this->enumMetadatas[0]->convertedValues);
         fputcsv($csv, ['enumClass', 'filepath', 'case', 'value', ...$convertors]);

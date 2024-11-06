@@ -2,6 +2,9 @@
 
 class PhpEnumSpyTest extends \PHPUnit\Framework\TestCase
 {
+    /**
+     * @runInSeparateProcess
+     */
     public function testRun() {
         $app = new \YTsuzaki\PhpEnumSpy\PhpEnumSpy();
         $app->run();
