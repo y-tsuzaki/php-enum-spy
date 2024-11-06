@@ -28,6 +28,4 @@ enum MyEnumA: string
             self::MY_CASE_C => '日本語c',
         };
     }
-
-
 }
