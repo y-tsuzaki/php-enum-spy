@@ -75,12 +75,6 @@ enum ExampleEnum: string
 Please refer to the following Example repository for details.
 https://github.com/y-tsuzaki/php-enum-spy-example
 
-## Installation
-
-```bash
-composer require --dev y-tsuzaki/php-enum-spy
-```
-
 ## Configuration
 
 Create a configuration file `php-enum-spy.config.php` in the root directory of your project.
@@ -124,6 +118,13 @@ $config = [
 ];
 
 return $config;
+```
+
+
+## Installation
+
+```bash
+composer require --dev y-tsuzaki/php-enum-spy
 ```
 
 ## Usage
