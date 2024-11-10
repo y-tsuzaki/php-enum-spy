@@ -107,7 +107,7 @@ $config = [
     "src",
   ],
   "convert_functions" => [
-    　// Add your custom convert function if needed
+      // Add your custom convert function if needed
       "your_custom_function" => function (UnitEnum $enum) {
           if (method_exists($enum, 'toJapanese')) {
               return $enum->toJapanese();
